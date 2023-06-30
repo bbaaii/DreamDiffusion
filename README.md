@@ -3,19 +3,19 @@
 <img src=assets/eeg_teaser.png />
 </p>
 
-## dreamdiffusion
-**dreamdiffusion** is a framework for generating high-quality images from brain EEG signals.
+## DreamDiffusion
+**DreamDiffusion** is a framework for generating high-quality images from brain EEG signals.
 This document introduces the precesedures required for replicating the results in *DreamDiffusion: Generating High-Quality Images from Brain EEG Signals*
 
 ## Abstract
-This paper introduces DreamDiffusion, a novel method for generating high-quality images directly from brain electroencephalogram (EEG) signals, without the need to translate thoughts into text. DreamDiffusion leverages pre-trained text-to-image models and employs temporal masked signal modeling to pre-train the EEG encoder for effective and robust EEG representations. Additionally, the method further leverages the CLIP image encoder to provide extra supervision to better align EEG, text, and image embeddings with limited EEG-image pairs. Overall, the proposed method overcomes the challenges of using EEG signals for image generation, such as noise, limited information, and individual differences, and achieves promising results. Quantitative and qualitative results demonstrate the effectiveness of the proposed method as a significant step towards portable and low-cost ``thoughts-to-image'', with potential applications in neuroscience and computer vision. 
+This paper introduces DreamDiffusion, a novel method for generating high-quality images directly from brain electroencephalogram (EEG) signals, without the need to translate thoughts into text. DreamDiffusion leverages pre-trained text-to-image models and employs temporal masked signal modeling to pre-train the EEG encoder for effective and robust EEG representations. Additionally, the method further leverages the CLIP image encoder to provide extra supervision to better align EEG, text, and image embeddings with limited EEG-image pairs. Overall, the proposed method overcomes the challenges of using EEG signals for image generation, such as noise, limited information, and individual differences, and achieves promising results. Quantitative and qualitative results demonstrate the effectiveness of the proposed method as a significant step towards portable and low-cost "thoughts-to-image", with potential applications in neuroscience and computer vision. 
 
 
 ## Overview
 ![pipeline](assets/eeg_pipeline.png)
 
 
-The **data** folder and **pretrains** folder are not included in this repository. 
+The **datasets** folder and **pretrains** folder are not included in this repository. 
 Please download them from [link](https:) and put them in the root directory of this repository as shown below. We also provide a copy of the Imagenet subset.
 
 For Stable Diffusion, we just use standard SD1.5. You can download it from the [official page of Stability](https://huggingface.co/runwayml/stable-diffusion-v1-5/tree/main). You want the file ["v1-5-pruned.ckpt"](https://huggingface.co/runwayml/stable-diffusion-v1-5/tree/main).
