@@ -127,7 +127,7 @@ Please cite the following paper if you use this repository in your reseach.
 ```
 @article{bai2023dreamdiffusion,
   title={DreamDiffusion: Generating High-Quality Images from Brain EEG Signals},
-  author={Bai, Yunpeng and Wang, Xintao and Cao, Yan-pei and Ge, Yixiao and Yuan, Chun and Shan, Ying},
+  author={Bai, Yunpeng and Wang, Xintao and Cao, Yanpei and Ge, Yixiao and Yuan, Chun and Shan, Ying},
   journal={arXiv preprint arXiv:2306.16934},
   year={2023}
 }
