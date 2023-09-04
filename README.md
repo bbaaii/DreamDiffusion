@@ -76,7 +76,8 @@ conda activate dreamdiffusion
 
 ## Download data and checkpoints
 
-We also provide checkpoints at [link](https://) to run the finetuing and decoding directly. 
+We also provide dataset [imagenet](https://drive.google.com/file/d/1y7I9bG1zKYqBM94odcox_eQjnP9HGo9-/view?usp=drive_link) [eeg](https://github.com/perceivelab/eeg_visual_classification) and checkpoints to run the finetuing and decoding directly. 
+
 
 
 ## Pre-training on EEG data
