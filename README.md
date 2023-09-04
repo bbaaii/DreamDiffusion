@@ -16,7 +16,7 @@ This paper introduces DreamDiffusion, a novel method for generating high-quality
 
 
 The **datasets** folder and **pretrains** folder are not included in this repository. 
-Please download them from [link](https:) and put them in the root directory of this repository as shown below. We also provide a copy of the Imagenet subset.
+Please download them from [eeg](https://github.com/perceivelab/eeg_visual_classification) and put them in the root directory of this repository as shown below. We also provide a copy of the Imagenet subset [imagenet](https://drive.google.com/file/d/1y7I9bG1zKYqBM94odcox_eQjnP9HGo9-/view?usp=drive_link).
 
 For Stable Diffusion, we just use standard SD1.5. You can download it from the [official page of Stability](https://huggingface.co/runwayml/stable-diffusion-v1-5/tree/main). You want the file ["v1-5-pruned.ckpt"](https://huggingface.co/runwayml/stable-diffusion-v1-5/tree/main).
 
@@ -76,7 +76,7 @@ conda activate dreamdiffusion
 
 ## Download data and checkpoints
 
-We also provide dataset [imagenet](https://drive.google.com/file/d/1y7I9bG1zKYqBM94odcox_eQjnP9HGo9-/view?usp=drive_link) [eeg](https://github.com/perceivelab/eeg_visual_classification) and checkpoints to run the finetuing and decoding directly. 
+We also checkpoints to run the finetuing and decoding directly. 
 
 
 
