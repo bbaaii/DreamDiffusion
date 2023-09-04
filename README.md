@@ -74,7 +74,7 @@ conda env create -f env.yaml
 conda activate dreamdiffusion
 ```
 
-## Download data and checkpoints
+## Download checkpoints
 
 We also checkpoints to run the finetuing and decoding directly. 
 
