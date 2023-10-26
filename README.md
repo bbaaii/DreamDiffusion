@@ -81,6 +81,9 @@ We also checkpoints to run the finetuing and decoding directly.
 
 
 ## Pre-training on EEG data
+
+You can download the dataset for pretraining from here [MOABB](https://github.com/NeuroTechX/moabb).
+
 To perform the pre-training from scratch with defaults parameters, run 
 ```sh
 python3 code/stageA1_eeg_pretrain.py
