@@ -103,7 +103,7 @@ python -m torch.distributed.launch --nproc_per_node=NUM_GPUS code/stageA1_eeg_pr
 
 
 
-## Finetune the Stable Diffusion with Pre-trained fMRI Encoder
+## Finetune the Stable Diffusion with Pre-trained EEG Encoder
 In this stage, the cross-attention heads and pre-trained EEG encoder will be jointly optimized with EEG-image pairs. 
 
 ```sh
