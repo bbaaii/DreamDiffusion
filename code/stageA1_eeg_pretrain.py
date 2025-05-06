@@ -121,7 +121,7 @@ def main(config):
     np.random.seed(config.seed)
 
     # create dataset and dataloader
-    dataset_pretrain = eeg_pretrain_dataset(path='../dreamdiffusion/datasets/mne_data/', roi=config.roi, patch_size=config.patch_size,
+    dataset_pretrain = eeg_pretrain_dataset(path='./datasets/mne_data/', roi=config.roi, patch_size=config.patch_size,
                 transform=fmri_transform, aug_times=config.aug_times, num_sub_limit=config.num_sub_limit, 
                 include_kam=config.include_kam, include_hcp=config.include_hcp)
    
