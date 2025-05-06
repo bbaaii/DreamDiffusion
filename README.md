@@ -107,7 +107,7 @@ python -m torch.distributed.launch --nproc_per_node=NUM_GPUS code/stageA1_eeg_pr
 In this stage, the cross-attention heads and pre-trained EEG encoder will be jointly optimized with EEG-image pairs. 
 
 ```sh
-python3 code/eeg_ldm.py --dataset EEG  --num_epoch 300 --batch_size 4 --pretrain_mbm_path ../dreamdiffusion/pretrains/eeg_pretrain/checkpoint.pth
+python3 code/eeg_ldm.py --dataset EEG  --num_epoch 300 --batch_size 4 --pretrain_mbm_path ./pretrains/eeg_pretrain/checkpoint.pth
 ```
 
 
