@@ -16,8 +16,6 @@ This code works in three steps, the first step isn't directly reproducible from 
 This step only needs many different EEG signals (around 120 000 EEGs are used in the paper), it is specified that
 the datasets can be picked from the MOABB datasets, but the specific datasets aren't specified.
 
-[this repository](https://github.com/alinvdu/reproduce-dream-diffusion/)
-proposes to use only the EEGs from the (EEG, Image) pairs used for the 2nd step but it makes poor results.
 
 ## Overview
 ![pipeline](assets/eeg_pipeline.png)
@@ -39,8 +37,6 @@ File path | Description
 ┣ 📂 generation  
 ┃   ┗ 📜 checkpoint_best.pth 
 ┃   ┗ 📜 checkpoint.pth
-┃   ┗ 📜 changeconfig.py
-┃   ┗ 📜 showconfig.py 
 
 ┣ 📂 eeg_pretain
 ┃   ┗ 📜 checkpoint-eeg-500.pth  (pre-trained EEG encoder)
@@ -85,13 +81,14 @@ conda env create -f env.yaml
 conda activate dreamdiffusion
 ```
 
-## Download checkpoints
+## Download checkpoint after pre-training on EEG data
 
-### Pre-training on the EEG data
+No checkpoint provided
 
-Please find the checkpoint after pretraining the EEG Autoencoder in [this repository](https://github.com/alinvdu/reproduce-dream-diffusion/).
+To make the code work (poorly), please find a checkpoint after pretraining the EEG Autoencoder in [this repository](https://github.com/alinvdu/reproduce-dream-diffusion/). They propose to use only the EEGs from the (EEG, Image) pairs but it makes poor results as this is few data.
 
 And put it in ```pretrains/eeg-pretrain/checkpoint-eeg-500.pth``` 
+
 
 ## Training the models
 
@@ -102,6 +99,9 @@ directory)
 ### Pre-training on EEG data
 
 You can download the dataset for pretraining from here [MOABB](https://github.com/NeuroTechX/moabb).
+
+The datasets used to get the papers's results aren't specified, but you can put
+any EEG dataset, put them in ```datasets/mne_data/``` in a `.npy` format. 
 
 To perform the pre-training from scratch with defaults parameters, run 
 ```sh

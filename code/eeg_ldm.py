@@ -12,7 +12,7 @@ from pytorch_lightning.loggers import WandbLogger
 import copy
 
 # own code
-from config import Config_Generative_Model
+from config import Config_Generative_Model, Config_MBM_EEG
 from dataset import  create_EEG_dataset
 from dc_ldm.ldm_for_eeg import eLDM
 from eval_metrics import get_similarity_metric
