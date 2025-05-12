@@ -28,7 +28,6 @@ File path | Description
 ┃   ┗ 📜 v1-5-pruned.ckpt
 
 ┣ 📂 generation  
-┃   ┗ 📜 checkpoint_best.pth 
 ┃   ┗ 📜 checkpoint.pth
 
 ┣ 📂 eeg_pretain
@@ -82,14 +81,10 @@ To make the code work (poorly), please find a checkpoint after pretraining the E
 
 And put it in ```pretrains/eeg-pretrain/checkpoint-eeg-500.pth``` 
 
+## Pre-training on EEG data
 
-## Training the models
-
-Here is how to make the checkpoints (remember to move them from the
-```results``` directory to the appropriate location in the ```pretrains```
-directory)
-
-### Pre-training on EEG data
+remember to move generated checkpoints from the ```results``` directory to the
+appropriate location in the ```pretrains``` directory
 
 You can download the dataset for pretraining from here [MOABB](https://github.com/NeuroTechX/moabb).
 
@@ -113,14 +108,18 @@ Multiple-GPU (DDP) training is supported, run with
 python -m torch.distributed.launch --nproc_per_node=NUM_GPUS code/stageA1_eeg_pretrain.py
 ```
 
-### Finetune the Stable Diffusion with Pre-trained EEG Encoder
+## Finetune the Stable Diffusion with Pre-trained EEG Encoder
+
+remember to move generated checkpoints from the ```results``` directory to the
+appropriate location in the ```pretrains``` directory
+
 In this stage, the cross-attention heads and pre-trained EEG encoder will be jointly optimized with EEG-image pairs. 
 
 ```sh
 python3 code/eeg_ldm.py --dataset EEG  --num_epoch 300 --batch_size 4 --pretrain_mbm_path ./pretrains/eeg_pretrain/checkpoint-eeg-500.pth
 ```
 
-### Generating Images with Trained Checkpoints
+## Generating Images with Trained Checkpoints
 Run this stage with our provided checkpoints: Here we provide a checkpoint [ckpt](https://drive.google.com/file/d/1Ygplxe1TB68-aYu082bjc89nD8Ngklnc/view?usp=drive_link), which you may want to try.
 
 ```sh
