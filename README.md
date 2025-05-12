@@ -17,7 +17,7 @@ This step only needs many different EEG signals (around 120 000 EEGs are used in
 the datasets can be picked from the MOABB datasets, but the specific datasets aren't specified.
 
 [this repository](https://github.com/alinvdu/reproduce-dream-diffusion/)
-proposes to use only the EEGs from the (EEG, Image) pairs used for the 2nd step.
+proposes to use only the EEGs from the (EEG, Image) pairs used for the 2nd step but it makes poor results.
 
 ## Overview
 ![pipeline](assets/eeg_pipeline.png)
@@ -26,7 +26,7 @@ proposes to use only the EEGs from the (EEG, Image) pairs used for the 2nd step.
 The **datasets** folder is not included in this repository. Neither are the pretrained models' checkpoints. 
 Please download them from [eeg](https://github.com/perceivelab/eeg_visual_classification) and put them in the root directory of this repository as shown below. We also provide a copy of the Imagenet subset [imagenet](https://drive.google.com/file/d/1y7I9bG1zKYqBM94odcox_eQjnP9HGo9-/view?usp=drive_link).
 
-For Stable Diffusion, we just use standard SD1.5. You can download it from the [official page of Stability](https://huggingface.co/stable-diffusion-v1-5/stable-diffusion-v1-5). You want the file ["v1-5-pruned.ckpt"](https://huggingface.co/runwayml/stable-diffusion-v1-5/tree/main).
+For Stable Diffusion, we just use standard SD1.5. You can download it from the [official page of Stability](https://huggingface.co/stable-diffusion-v1-5/stable-diffusion-v1-5). You want the file ["v1-5-pruned.ckpt"](https://huggingface.co/stable-diffusion-v1-5/stable-diffusion-v1-5).
 
 File path | Description
 ```
@@ -123,34 +123,15 @@ python -m torch.distributed.launch --nproc_per_node=NUM_GPUS code/stageA1_eeg_pr
 ### Finetune the Stable Diffusion with Pre-trained EEG Encoder
 In this stage, the cross-attention heads and pre-trained EEG encoder will be jointly optimized with EEG-image pairs. 
 
-Before 
-
 ```sh
 python3 code/eeg_ldm.py --dataset EEG  --num_epoch 300 --batch_size 4 --pretrain_mbm_path ./pretrains/eeg_pretrain/checkpoint-eeg-500.pth
 ```
 
-
 ### Generating Images with Trained Checkpoints
 Run this stage with our provided checkpoints: Here we provide a checkpoint [ckpt](https://drive.google.com/file/d/1Ygplxe1TB68-aYu082bjc89nD8Ngklnc/view?usp=drive_link), which you may want to try.
 
-Do
 ```sh
-cd pretrains/generation
-python changeconfig.py
-```
-to change some of the checkpoint's config parameters and save the modified
-checkpoint as `checkpoint2.pth`
-
-You can print one checkpoint's config parameters with 
-```sh
-cd pretrains/generation
-python showconfig.py checkpoint.pth
-```
-
-Finally, generate images
-
-```sh
-python3 code/gen_eval_eeg.py --dataset EEG --model_path  pretrains/generation/checkpoint2.pth
+python3 code/gen_eval_eeg.py --dataset EEG --model_path  pretrains/generation/checkpoint.pth
 ```
 
 

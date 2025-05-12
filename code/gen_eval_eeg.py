@@ -68,6 +68,11 @@ if __name__ == '__main__':
     config = sd['config']
     # update paths
     config.root_path = root
+    config.eeg_signals_path = "./datasets/eeg_5_95_std.pth"
+    config.splits_path = "./datasets/block_splits_by_image_single.pth"
+    config.pretrain_mbm_path = "./pretrains/eeg-pretrain/checkpoint-eeg-500.pth"
+    config.pretrain_gm_path = './pretrains/'
+
     output_path = os.path.join(config.root_path, 'results', 'eval',  
                     '%s'%(datetime.datetime.now().strftime("%d-%m-%Y-%H-%M-%S")))
     
@@ -95,7 +100,6 @@ if __name__ == '__main__':
     # num_voxels = dataset_test.num_voxels
     print(len(dataset_test))
     # prepare pretrained mae 
-    print(config.pretrain_mbm_path)
     pretrain_mbm_metafile = torch.load(config.pretrain_mbm_path, map_location='cpu')
     # create generateive model
     generative_model = eLDM(pretrain_mbm_metafile, num_voxels,
