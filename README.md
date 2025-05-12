@@ -10,13 +10,6 @@ This document introduces the precesedures required for replicating the results i
 ## Abstract
 This paper introduces DreamDiffusion, a novel method for generating high-quality images directly from brain electroencephalogram (EEG) signals, without the need to translate thoughts into text. DreamDiffusion leverages pre-trained text-to-image models and employs temporal masked signal modeling to pre-train the EEG encoder for effective and robust EEG representations. Additionally, the method further leverages the CLIP image encoder to provide extra supervision to better align EEG, text, and image embeddings with limited EEG-image pairs. Overall, the proposed method overcomes the challenges of using EEG signals for image generation, such as noise, limited information, and individual differences, and achieves promising results. Quantitative and qualitative results demonstrate the effectiveness of the proposed method as a significant step towards portable and low-cost "thoughts-to-image", with potential applications in neuroscience and computer vision. 
 
-# WARNING
-
-This code works in three steps, the first step isn't directly reproducible from this directory.
-This step only needs many different EEG signals (around 120 000 EEGs are used in the paper), it is specified that
-the datasets can be picked from the MOABB datasets, but the specific datasets aren't specified.
-
-
 ## Overview
 ![pipeline](assets/eeg_pipeline.png)
 
