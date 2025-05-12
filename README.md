@@ -10,15 +10,23 @@ This document introduces the precesedures required for replicating the results i
 ## Abstract
 This paper introduces DreamDiffusion, a novel method for generating high-quality images directly from brain electroencephalogram (EEG) signals, without the need to translate thoughts into text. DreamDiffusion leverages pre-trained text-to-image models and employs temporal masked signal modeling to pre-train the EEG encoder for effective and robust EEG representations. Additionally, the method further leverages the CLIP image encoder to provide extra supervision to better align EEG, text, and image embeddings with limited EEG-image pairs. Overall, the proposed method overcomes the challenges of using EEG signals for image generation, such as noise, limited information, and individual differences, and achieves promising results. Quantitative and qualitative results demonstrate the effectiveness of the proposed method as a significant step towards portable and low-cost "thoughts-to-image", with potential applications in neuroscience and computer vision. 
 
+# WARNING
+
+This code works in three steps, the first step isn't directly reproducible from this directory.
+This step only needs many different EEG signals (around 120 000 EEGs are used in the paper), it is specified that
+the datasets can be picked from the MOABB datasets, but the specific datasets aren't specified.
+
+[this repository](https://github.com/alinvdu/reproduce-dream-diffusion/)
+proposes to use only the EEGs from the (EEG, Image) pairs used for the 2nd step.
 
 ## Overview
 ![pipeline](assets/eeg_pipeline.png)
 
 
-The **datasets** folder and **pretrains** folder are not included in this repository. 
+The **datasets** folder is not included in this repository. Neither are the pretrained models' checkpoints. 
 Please download them from [eeg](https://github.com/perceivelab/eeg_visual_classification) and put them in the root directory of this repository as shown below. We also provide a copy of the Imagenet subset [imagenet](https://drive.google.com/file/d/1y7I9bG1zKYqBM94odcox_eQjnP9HGo9-/view?usp=drive_link).
 
-For Stable Diffusion, we just use standard SD1.5. You can download it from the [official page of Stability](https://huggingface.co/runwayml/stable-diffusion-v1-5/tree/main). You want the file ["v1-5-pruned.ckpt"](https://huggingface.co/runwayml/stable-diffusion-v1-5/tree/main).
+For Stable Diffusion, we just use standard SD1.5. You can download it from the [official page of Stability](https://huggingface.co/stable-diffusion-v1-5/stable-diffusion-v1-5). You want the file ["v1-5-pruned.ckpt"](https://huggingface.co/runwayml/stable-diffusion-v1-5/tree/main).
 
 File path | Description
 ```
@@ -30,9 +38,12 @@ File path | Description
 
 ┣ 📂 generation  
 ┃   ┗ 📜 checkpoint_best.pth 
+┃   ┗ 📜 checkpoint.pth
+┃   ┗ 📜 changeconfig.py
+┃   ┗ 📜 showconfig.py 
 
 ┣ 📂 eeg_pretain
-┃   ┗ 📜 checkpoint.pth  (pre-trained EEG encoder)
+┃   ┗ 📜 checkpoint-eeg-500.pth  (pre-trained EEG encoder)
 
 /datasets
 ┣ 📂 imageNet_images (subset of Imagenet)
@@ -76,11 +87,19 @@ conda activate dreamdiffusion
 
 ## Download checkpoints
 
-We also checkpoints to run the finetuing and decoding directly. 
+### Pre-training on the EEG data
 
+Please find the checkpoint after pretraining the EEG Autoencoder in [this repository](https://github.com/alinvdu/reproduce-dream-diffusion/).
 
+And put it in ```pretrains/eeg-pretrain/checkpoint-eeg-500.pth``` 
 
-## Pre-training on EEG data
+## Training the models
+
+Here is how to make the checkpoints (remember to move them from the
+```results``` directory to the appropriate location in the ```pretrains```
+directory)
+
+### Pre-training on EEG data
 
 You can download the dataset for pretraining from here [MOABB](https://github.com/NeuroTechX/moabb).
 
@@ -101,20 +120,37 @@ Multiple-GPU (DDP) training is supported, run with
 python -m torch.distributed.launch --nproc_per_node=NUM_GPUS code/stageA1_eeg_pretrain.py
 ```
 
-
-
-## Finetune the Stable Diffusion with Pre-trained EEG Encoder
+### Finetune the Stable Diffusion with Pre-trained EEG Encoder
 In this stage, the cross-attention heads and pre-trained EEG encoder will be jointly optimized with EEG-image pairs. 
 
+Before 
+
 ```sh
-python3 code/eeg_ldm.py --dataset EEG  --num_epoch 300 --batch_size 4 --pretrain_mbm_path ./pretrains/eeg_pretrain/checkpoint.pth
+python3 code/eeg_ldm.py --dataset EEG  --num_epoch 300 --batch_size 4 --pretrain_mbm_path ./pretrains/eeg_pretrain/checkpoint-eeg-500.pth
 ```
 
 
-## Generating Images with Trained Checkpoints
+### Generating Images with Trained Checkpoints
 Run this stage with our provided checkpoints: Here we provide a checkpoint [ckpt](https://drive.google.com/file/d/1Ygplxe1TB68-aYu082bjc89nD8Ngklnc/view?usp=drive_link), which you may want to try.
+
+Do
 ```sh
-python3 code/gen_eval_eeg.py --dataset EEG --model_path  pretrains/generation/checkpoint.pth
+cd pretrains/generation
+python changeconfig.py
+```
+to change some of the checkpoint's config parameters and save the modified
+checkpoint as `checkpoint2.pth`
+
+You can print one checkpoint's config parameters with 
+```sh
+cd pretrains/generation
+python showconfig.py checkpoint.pth
+```
+
+Finally, generate images
+
+```sh
+python3 code/gen_eval_eeg.py --dataset EEG --model_path  pretrains/generation/checkpoint2.pth
 ```
 
 

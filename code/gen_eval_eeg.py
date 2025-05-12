@@ -68,10 +68,6 @@ if __name__ == '__main__':
     config = sd['config']
     # update paths
     config.root_path = root
-    config.pretrain_mbm_path = './results/eeg_pretrain/19-02-2023-08-48-17/checkpoints/checkpoint.pth'
-    config.pretrain_gm_path = './pretrains/'
-    print(config.__dict__)
-
     output_path = os.path.join(config.root_path, 'results', 'eval',  
                     '%s'%(datetime.datetime.now().strftime("%d-%m-%Y-%H-%M-%S")))
     
@@ -99,6 +95,7 @@ if __name__ == '__main__':
     # num_voxels = dataset_test.num_voxels
     print(len(dataset_test))
     # prepare pretrained mae 
+    print(config.pretrain_mbm_path)
     pretrain_mbm_metafile = torch.load(config.pretrain_mbm_path, map_location='cpu')
     # create generateive model
     generative_model = eLDM(pretrain_mbm_metafile, num_voxels,

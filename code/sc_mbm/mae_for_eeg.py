@@ -1,5 +1,5 @@
 import sys
-sys.path.append('../dreamdiffusion/code/')
+sys.path.append('./code/')
 # print(sys.path)
 import sc_mbm.utils as ut
 import torch
