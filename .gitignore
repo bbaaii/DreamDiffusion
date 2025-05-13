@@ -4,7 +4,8 @@ __pycache__/
 dist/
 *.egg-info/
 
-datasets/*
+datasets/*.pth
+datasets/*.JPEG
 exps/*
 results/*
 
