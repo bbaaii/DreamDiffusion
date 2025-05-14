@@ -113,17 +113,18 @@ class eeg_pretrain_dataset(Dataset):
         images = []
         self.input_paths = [str(f) for f in sorted(Path(path).rglob('*')) if is_npy_ext(f) and os.path.isfile(f)]
 
+        self.inputs = [np.load(data_path) for data_path in self.input_paths]
+        self.real_input = np.concatenate(self.inputs, axis=0)
+
         assert len(self.input_paths) != 0, 'No data found'
         self.data_len  = 512
         self.data_chan = 128
 
     def __len__(self):
-        return len(self.input_paths)
+        return len(self.real_input)
     
     def __getitem__(self, index):
-        data_path = self.input_paths[index]
-
-        data = np.load(data_path)
+        data = self.real_input[index]
 
         if data.shape[-1] > self.data_len:
             idx = np.random.randint(0, int(data.shape[-1] - self.data_len)+1)
