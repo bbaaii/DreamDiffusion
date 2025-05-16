@@ -1,0 +1,3 @@
+[submodule "code/TimeMAE"]
+    path = code/TimeMAE
+    url = git@github.com:Mingyue-Cheng/TimeMAE.git
