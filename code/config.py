@@ -34,7 +34,6 @@ class Config_MBM_EEG(Config_MAE_fMRI):
         self.root_path = './'
         self.output_path = './exps/'
         self.seed = 2022
-        self.roi = 'VC'
         self.aug_times = 1
         self.num_sub_limit = None
         self.include_hcp = True

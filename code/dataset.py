@@ -106,17 +106,17 @@ def is_npy_ext(fname: Union[str, Path]) -> bool:
     return f'{ext}' == 'npy'# type: ignore
 
 class eeg_pretrain_dataset(Dataset):
-    def __init__(self, path='./datasets/mne_data/', roi='VC', patch_size=16, transform=identity, aug_times=2, 
-                num_sub_limit=None, include_kam=False, include_hcp=True):
+    def __init__(self, path):
         super(eeg_pretrain_dataset, self).__init__()
         data = []
         images = []
         self.input_paths = [str(f) for f in sorted(Path(path).rglob('*')) if is_npy_ext(f) and os.path.isfile(f)]
 
+        assert len(self.input_paths) != 0, 'No data found'
+
         self.inputs = [np.load(data_path) for data_path in self.input_paths]
         self.real_input = np.concatenate(self.inputs, axis=0)
 
-        assert len(self.input_paths) != 0, 'No data found'
         self.data_len  = 512
         self.data_chan = 128
 
