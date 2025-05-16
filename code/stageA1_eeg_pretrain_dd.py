@@ -108,8 +108,8 @@ def main(config):
         torch.distributed.init_process_group(backend='nccl')
     output_path = os.path.join(config.root_path, 'results', 'eeg_pretrain',  '%s'%(datetime.datetime.now().strftime("%d-%m-%Y-%H-%M-%S")))
     config.output_path = output_path
-    # logger = wandb_logger(config) if config.local_rank == 0 else None
-    logger = None
+    logger = wandb_logger(config) if config.local_rank == 0 else None
+    # logger = None
     
     if config.local_rank == 0:
         os.makedirs(output_path, exist_ok=True)

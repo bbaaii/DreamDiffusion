@@ -89,7 +89,7 @@ appropriate location in the ```pretrains``` directory
 You can download the dataset for pretraining from here [MOABB](https://github.com/NeuroTechX/moabb).
 
 The datasets used to get the papers's results aren't specified, but you can put
-any EEG dataset, put them in ```datasets/mne_data/``` in a `.npy` format. 
+any EEG dataset, put them in ```datasets/eeg_train/``` and ```dataset/eeg_test/``` in a `.npy` format. 
 
 To perform the pre-training from scratch with defaults parameters, run 
 ```sh

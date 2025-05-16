@@ -32,13 +32,12 @@ from moabb.datasets import *
 datasets = [Schirrmeister2017(), GrosseWentrup2009()]
 sample_size = 490
 
-datas = []
-for dataset in datasets:
+def dl_dataset(dataset, subjects, outpath):
     try:
         print("\n#####")
         print(dataset)
         print("#####\n")
-        data = dataset.get_data(subjects=dataset.subject_list[:2])
+        data = dataset.get_data(subjects=subjects)
         for raw_path, raw_data in find_raw_objects(data):
             print()
             npdata = raw_data.pick_types(eeg=True).get_data()
@@ -57,7 +56,7 @@ for dataset in datasets:
             print(f"New shape: {res.shape}")
 
 
-            whole_path = 'mne_data/'+dataset.code+"/"+raw_path+'.npy'
+            whole_path = outpath+'/'+dataset.code+"/"+raw_path+'.npy'
             print(f"Saving in {whole_path}")
 
             os.makedirs(os.path.dirname(whole_path), exist_ok=True)
@@ -66,3 +65,8 @@ for dataset in datasets:
 
     except Exception as e:
         print(e)
+
+for dataset in datasets:
+    subjects = dataset.subject_list
+    dl_dataset(dataset, subjects[:1], "eeg_train/")
+    dl_dataset(dataset, subjects[1:2], "eeg_test/")
