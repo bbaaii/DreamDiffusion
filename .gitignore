@@ -4,11 +4,14 @@ __pycache__/
 dist/
 *.egg-info/
 
-datasets/mne_data/
+datasets/eeg_train/
+datasets/eeg_test/
 datasets/*.pth
 datasets/**/*.JPEG
-exps/*
-results/*
+exps/
+exp/
+results/
+wandb/
 
 pretrains/models/v1-5-pruned.ckpt
 pretrains/eeg-pretrain/*.pth
