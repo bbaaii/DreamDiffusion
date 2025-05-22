@@ -16,25 +16,24 @@ class Config_MBM_EEG(Config_MAE_fMRI):
         self.min_lr = 0.
         self.weight_decay = 0.05
         self.num_epoch = 500
-        self.warmup_epochs = 40
-        self.batch_size = 100
+        self.warmup_epochs = 10
+        self.batch_size = 128
         self.clip_grad = 0.8
         
         # Model Parameters
-        self.mask_ratio = 0.1
+        self.mask_ratio = 0.5
         self.patch_size = 4 #  1
         self.embed_dim = 1024 #256 # has to be a multiple of num_heads
         self.decoder_embed_dim = 512 #128
         self.depth = 24
         self.num_heads = 16
         self.decoder_num_heads = 16
-        self.mlp_ratio = 1.0
+        self.mlp_ratio = 0.8
 
         # Project setting
-        self.root_path = '../dreamdiffusion/'
-        self.output_path = '../dreamdiffusion/exps/'
+        self.root_path = './'
+        self.output_path = './exps/'
         self.seed = 2022
-        self.roi = 'VC'
         self.aug_times = 1
         self.num_sub_limit = None
         self.include_hcp = True
@@ -54,15 +53,15 @@ class Config_EEG_finetune(Config_MBM_finetune):
     def __init__(self):
         
         # Project setting
-        self.root_path = '../dreamdiffusion/'
+        self.root_path = './'
         # self.root_path = '.'
-        self.output_path = '../dreamdiffusion/exps/'
+        self.output_path = './exps/'
 
         self.eeg_signals_path = os.path.join(self.root_path, 'datasets/eeg_5_95_std.pth')
         self.splits_path = os.path.join(self.root_path, 'datasets/block_splits_by_image_all.pth')
 
         self.dataset = 'EEG' 
-        self.pretrain_mbm_path = '../dreamdiffusion/pretrains/eeg_pretrain/checkpoint.pth' 
+        self.pretrain_mbm_path = './pretrains/eeg_pretrain/checkpoint.pth' 
 
         self.include_nonavg_test = True
 
@@ -71,7 +70,7 @@ class Config_EEG_finetune(Config_MBM_finetune):
         self.lr = 5.3e-5
         self.weight_decay = 0.05
         self.num_epoch = 15
-        self.batch_size = 16 if self.dataset == 'GOD' else 4 
+        self.batch_size = 32 if self.dataset == 'GOD' else 16 
         self.mask_ratio = 0.5
         self.accum_iter = 1
         self.clip_grad = 0.8
@@ -89,8 +88,8 @@ class Config_Generative_Model:
     def __init__(self):
         # project parameters
         self.seed = 2022
-        self.root_path = '../dreamdiffusion/'
-        self.output_path = '../dreamdiffusion/exps/'
+        self.root_path = './'
+        self.output_path = './exps/'
 
         self.eeg_signals_path = os.path.join(self.root_path, 'datasets/eeg_5_95_std.pth')
         self.splits_path = os.path.join(self.root_path, 'datasets/block_splits_by_image_single.pth')
@@ -111,7 +110,7 @@ class Config_Generative_Model:
 
         np.random.seed(self.seed)
         # finetune parameters
-        self.batch_size = 5 if self.dataset == 'GOD' else 25
+        self.batch_size = 32 if self.dataset == 'GOD' else 16
         self.lr = 5.3e-5
         self.num_epoch = 500
         
@@ -139,8 +138,8 @@ class Config_Cls_Model:
     def __init__(self):
         # project parameters
         self.seed = 2022
-        self.root_path = '../dreamdiffusion/'
-        self.output_path = '../dreamdiffusion/exps/'
+        self.root_path = './'
+        self.output_path = './exps/'
 
         # self.eeg_signals_path = os.path.join(self.root_path, 'datasets/eeg_5_95_std.pth')
         self.eeg_signals_path = os.path.join(self.root_path, 'datasets/eeg_14_70_std.pth')
@@ -162,7 +161,7 @@ class Config_Cls_Model:
 
         np.random.seed(self.seed)
         # finetune parameters
-        self.batch_size = 5 if self.dataset == 'GOD' else 25
+        self.batch_size = 32 if self.dataset == 'GOD' else 16
         self.lr = 5.3e-5
         self.num_epoch = 50
         

@@ -12,7 +12,7 @@ from pytorch_lightning.loggers import WandbLogger
 import copy
 
 # own code
-from config import Config_Generative_Model
+from config import Config_Generative_Model, Config_MBM_EEG
 from dataset import  create_EEG_dataset
 from dc_ldm.ldm_for_eeg import eLDM
 from eval_metrics import get_similarity_metric
@@ -178,7 +178,7 @@ def get_args_parser():
     parser = argparse.ArgumentParser('Double Conditioning LDM Finetuning', add_help=False)
     # project parameters
     parser.add_argument('--seed', type=int)
-    parser.add_argument('--root_path', type=str, default = '../dreamdiffusion/')
+    parser.add_argument('--root_path', type=str, default = './')
     parser.add_argument('--pretrain_mbm_path', type=str)
     parser.add_argument('--checkpoint_path', type=str)
     parser.add_argument('--crop_ratio', type=float)

@@ -106,24 +106,25 @@ def is_npy_ext(fname: Union[str, Path]) -> bool:
     return f'{ext}' == 'npy'# type: ignore
 
 class eeg_pretrain_dataset(Dataset):
-    def __init__(self, path='../dreamdiffusion/datasets/mne_data/', roi='VC', patch_size=16, transform=identity, aug_times=2, 
-                num_sub_limit=None, include_kam=False, include_hcp=True):
+    def __init__(self, path):
         super(eeg_pretrain_dataset, self).__init__()
         data = []
         images = []
         self.input_paths = [str(f) for f in sorted(Path(path).rglob('*')) if is_npy_ext(f) and os.path.isfile(f)]
 
         assert len(self.input_paths) != 0, 'No data found'
+
+        self.inputs = [np.load(data_path) for data_path in self.input_paths]
+        self.real_input = np.concatenate(self.inputs, axis=0)
+
         self.data_len  = 512
         self.data_chan = 128
 
     def __len__(self):
-        return len(self.input_paths)
+        return len(self.real_input)
     
     def __getitem__(self, index):
-        data_path = self.input_paths[index]
-
-        data = np.load(data_path)
+        data = self.real_input[index]
 
         if data.shape[-1] > self.data_len:
             idx = np.random.randint(0, int(data.shape[-1] - self.data_len)+1)
@@ -240,7 +241,7 @@ class EEGDataset_r(Dataset):
     # Constructor
     def __init__(self, eeg_signals_path, image_transform=identity):
 
-        self.imagenet = '/apdcephfs/share_1290939/0_public_datasets/imageNet_2012/train/'
+        self.imagenet = './datasets/imageNet_2012/train/'
         self.image_transform = image_transform
         self.num_voxels = 440
         self.data_len = 512
@@ -276,7 +277,7 @@ class EEGDataset_s(Dataset):
         self.data = loaded['dataset']        
         self.labels = loaded["labels"]
         self.images = loaded["images"]
-        self.imagenet = '/apdcephfs/share_1290939/0_public_datasets/imageNet_2012/train/'
+        self.imagenet = './datasets/imageNet_images/'
         self.image_transform = image_transform
         self.num_voxels = 440
         # Compute size
@@ -316,7 +317,7 @@ class EEGDataset(Dataset):
             self.data = loaded['dataset']        
         self.labels = loaded["labels"]
         self.images = loaded["images"]
-        self.imagenet = '/apdcephfs/share_1290939/0_public_datasets/imageNet_2012/train/'
+        self.imagenet = './datasets/imageNet_images'
         self.image_transform = image_transform
         self.num_voxels = 440
         self.data_len = 512
@@ -386,12 +387,12 @@ class Splitter:
         return self.dataset[self.split_idx[i]]
 
 
-def create_EEG_dataset(eeg_signals_path='../dreamdiffusion/datasets/eeg_5_95_std.pth', 
-            splits_path = '../dreamdiffusion/datasets/block_splits_by_image_single.pth',
-            # splits_path = '../dreamdiffusion/datasets/block_splits_by_image_all.pth',
+def create_EEG_dataset(eeg_signals_path='./datasets/eeg_5_95_std.pth', 
+            splits_path = './datasets/block_splits_by_image_single.pth',
+            # splits_path = './datasets/block_splits_by_image_all.pth',
             image_transform=identity, subject = 0):
     # if subject == 0:
-        # splits_path = '../dreamdiffusion/datasets/block_splits_by_image_all.pth'
+        # splits_path = './datasets/block_splits_by_image_all.pth'
     if isinstance(image_transform, list):
         dataset_train = EEGDataset(eeg_signals_path, image_transform[0], subject )
         dataset_test = EEGDataset(eeg_signals_path, image_transform[1], subject)
@@ -405,9 +406,9 @@ def create_EEG_dataset(eeg_signals_path='../dreamdiffusion/datasets/eeg_5_95_std
 
 
 
-def create_EEG_dataset_r(eeg_signals_path='../dreamdiffusion/datasets/eeg_5_95_std.pth', 
-            # splits_path = '../dreamdiffusion/datasets/block_splits_by_image_single.pth',
-            splits_path = '../dreamdiffusion/datasets/block_splits_by_image_all.pth',
+def create_EEG_dataset_r(eeg_signals_path='./datasets/eeg_5_95_std.pth', 
+            # splits_path = './datasets/block_splits_by_image_single.pth',
+            splits_path = './datasets/block_splits_by_image_all.pth',
             image_transform=identity):
     if isinstance(image_transform, list):
         dataset_train = EEGDataset_r(eeg_signals_path, image_transform[0])

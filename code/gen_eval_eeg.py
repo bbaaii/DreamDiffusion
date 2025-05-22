@@ -51,7 +51,7 @@ class random_crop:
 def get_args_parser():
     parser = argparse.ArgumentParser('Double Conditioning LDM Finetuning', add_help=False)
     # project parameters
-    parser.add_argument('--root', type=str, default='../dreamdiffusion/')
+    parser.add_argument('--root', type=str, default='./')
     parser.add_argument('--dataset', type=str, default='GOD')
     parser.add_argument('--model_path', type=str)
 
@@ -68,9 +68,10 @@ if __name__ == '__main__':
     config = sd['config']
     # update paths
     config.root_path = root
-    config.pretrain_mbm_path = '../dreamdiffusion/results/eeg_pretrain/19-02-2023-08-48-17/checkpoints/checkpoint.pth'
-    config.pretrain_gm_path = '../dreamdiffusion/pretrains/'
-    print(config.__dict__)
+    config.eeg_signals_path = "./datasets/eeg_5_95_std.pth"
+    config.splits_path = "./datasets/block_splits_by_image_single.pth"
+    config.pretrain_mbm_path = "./pretrains/eeg-pretrain/checkpoint-eeg-500.pth"
+    config.pretrain_gm_path = './pretrains/'
 
     output_path = os.path.join(config.root_path, 'results', 'eval',  
                     '%s'%(datetime.datetime.now().strftime("%d-%m-%Y-%H-%M-%S")))
@@ -91,7 +92,7 @@ if __name__ == '__main__':
     ])
 
     
-    splits_path = "../dreamdiffusion/datasets/block_splits_by_image_single.pth"
+    splits_path = "./datasets/block_splits_by_image_single.pth"
     dataset_train, dataset_test = create_EEG_dataset(eeg_signals_path = config.eeg_signals_path, splits_path = splits_path, 
                 image_transform=[img_transform_train, img_transform_test], subject = 4)
     num_voxels = dataset_test.dataset.data_len

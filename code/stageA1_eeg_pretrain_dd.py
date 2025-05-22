@@ -74,7 +74,6 @@ def get_args_parser():
     # Project setting
     parser.add_argument('--root_path', type=str)
     parser.add_argument('--seed', type=str)
-    parser.add_argument('--roi', type=str)
     parser.add_argument('--aug_times', type=int)
     parser.add_argument('--num_sub_limit', type=int)
 
@@ -109,8 +108,8 @@ def main(config):
         torch.distributed.init_process_group(backend='nccl')
     output_path = os.path.join(config.root_path, 'results', 'eeg_pretrain',  '%s'%(datetime.datetime.now().strftime("%d-%m-%Y-%H-%M-%S")))
     config.output_path = output_path
-    # logger = wandb_logger(config) if config.local_rank == 0 else None
-    logger = None
+    logger = wandb_logger(config) if config.local_rank == 0 else None
+    # logger = None
     
     if config.local_rank == 0:
         os.makedirs(output_path, exist_ok=True)
@@ -121,9 +120,7 @@ def main(config):
     np.random.seed(config.seed)
 
     # create dataset and dataloader
-    dataset_pretrain = eeg_pretrain_dataset(path='../dreamdiffusion/datasets/mne_data/', roi=config.roi, patch_size=config.patch_size,
-                transform=fmri_transform, aug_times=config.aug_times, num_sub_limit=config.num_sub_limit, 
-                include_kam=config.include_kam, include_hcp=config.include_hcp)
+    dataset_pretrain = eeg_pretrain_dataset(path='./datasets/eeg_train/')
    
     print(f'Dataset size: {len(dataset_pretrain)}\n Time len: {dataset_pretrain.data_len}')
     sampler = torch.utils.data.DistributedSampler(dataset_pretrain, rank=config.local_rank) if torch.cuda.device_count() > 1 else None 
