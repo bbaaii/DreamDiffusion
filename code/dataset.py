@@ -235,75 +235,10 @@ import numpy as np
  
 
 
-class EEGDataset_r(Dataset):
-    
-    # Constructor
-    def __init__(self, eeg_signals_path, image_transform=identity):
-
-        self.imagenet = '/apdcephfs/share_1290939/0_public_datasets/imageNet_2012/train/'
-        self.image_transform = image_transform
-        self.num_voxels = 440
-        self.data_len = 512
-        # # Compute size
-        self.size = 100
-
-    # Get size
-    def __len__(self):
-        return 100
-
-    # Get item
-    def __getitem__(self, i):
-        # Process EEG
-        eeg = torch.randn(128,512)
-
-        # print(image.shape)
-        label = torch.tensor(0).long()
-        image = torch.randn(3,512,512)
-        image_raw = image
-
-        return {'eeg': eeg, 'label': label, 'image': self.image_transform(image), 'image_raw': image_raw}
-
-
-class EEGDataset_s(Dataset):
-    
-    # Constructor
-    def __init__(self, eeg_signals_path, image_transform=identity):
-        # Load EEG signals
-        loaded = torch.load(eeg_signals_path)
-        # if opt.subject!=0:
-        #     self.data = [loaded['dataset'][i] for i in range(len(loaded['dataset']) ) if loaded['dataset'][i]['subject']==opt.subject]
-        # else:
-        self.data = loaded['dataset']        
-        self.labels = loaded["labels"]
-        self.images = loaded["images"]
-        self.imagenet = '/apdcephfs/share_1290939/0_public_datasets/imageNet_2012/train/'
-        self.image_transform = image_transform
-        self.num_voxels = 440
-        # Compute size
-        self.size = len(self.data)
-
-    # Get size
-    def __len__(self):
-        return self.size
-
-    # Get item
-    def __getitem__(self, i):
-        # Process EEG
-        eeg = self.data[i]["eeg"].float().t()
-
-        eeg = eeg[20:460,:]
-
-        # Get label
-        image_name = self.images[self.data[i]["image"]]
-        # image_path = os.path.join(self.imagenet, image_name.split('_')[0], image_name+'.JPEG')
-        return image_name
-
-
-
 class EEGDataset(Dataset):
     
     # Constructor
-    def __init__(self, eeg_signals_path, image_transform=identity, subject = 4):
+    def __init__(self, eeg_signals_path, imagenet_path, image_transform=identity, subject = 4):
         # Load EEG signals
         loaded = torch.load(eeg_signals_path)
         # if opt.subject!=0:
@@ -316,7 +251,7 @@ class EEGDataset(Dataset):
             self.data = loaded['dataset']        
         self.labels = loaded["labels"]
         self.images = loaded["images"]
-        self.imagenet = '/apdcephfs/share_1290939/0_public_datasets/imageNet_2012/train/'
+        self.imagenet = imagenet_path
         self.image_transform = image_transform
         self.num_voxels = 440
         self.data_len = 512
@@ -330,26 +265,30 @@ class EEGDataset(Dataset):
 
     # Get item
     def __getitem__(self, i):
-        # Process EEG
-        # print(self.data[i])
+
         eeg = self.data[i]["eeg"].float().t()
 
         eeg = eeg[20:460,:]
-        ##### 2023 2 13 add preprocess and transpose
+
         eeg = np.array(eeg.transpose(0,1))
         x = np.linspace(0, 1, eeg.shape[-1])
         x2 = np.linspace(0, 1, self.data_len)
         f = interp1d(x, eeg)
         eeg = f(x2)
         eeg = torch.from_numpy(eeg).float()
-        ##### 2023 2 13 add preprocess
+
         label = torch.tensor(self.data[i]["label"]).long()
 
         # Get label
         image_name = self.images[self.data[i]["image"]]
-        image_path = os.path.join(self.imagenet, image_name.split('_')[0], image_name+'.JPEG')
+        if self.imagenet:
+            image_path = os.path.join(self.imagenet, image_name.split('_')[0], image_name+'.JPEG')
+            image_raw = Image.open(image_path).convert('RGB') 
         # print(image_path)
-        image_raw = Image.open(image_path).convert('RGB') 
+        else:
+            noise = np.random.randint(0, 256, (512, 512, 3), dtype=np.uint8)
+            image_raw = Image.fromarray(noise, 'RGB')
+        
         
         image = np.array(image_raw) / 255.0
         image_raw = self.processor(images=image_raw, return_tensors="pt")
@@ -388,36 +327,19 @@ class Splitter:
 
 def create_EEG_dataset(eeg_signals_path='../dreamdiffusion/datasets/eeg_5_95_std.pth', 
             splits_path = '../dreamdiffusion/datasets/block_splits_by_image_single.pth',
-            # splits_path = '../dreamdiffusion/datasets/block_splits_by_image_all.pth',
+            imagenet_path = None,
             image_transform=identity, subject = 0):
-    # if subject == 0:
-        # splits_path = '../dreamdiffusion/datasets/block_splits_by_image_all.pth'
+
     if isinstance(image_transform, list):
-        dataset_train = EEGDataset(eeg_signals_path, image_transform[0], subject )
-        dataset_test = EEGDataset(eeg_signals_path, image_transform[1], subject)
+        dataset_train = EEGDataset(eeg_signals_path, imagenet_path, image_transform[0], subject )
+        dataset_test = EEGDataset(eeg_signals_path, imagenet_path, image_transform[1], subject)
     else:
-        dataset_train = EEGDataset(eeg_signals_path, image_transform, subject)
-        dataset_test = EEGDataset(eeg_signals_path, image_transform, subject)
+        dataset_train = EEGDataset(eeg_signals_path, imagenet_path, image_transform, subject)
+        dataset_test = EEGDataset(eeg_signals_path, imagenet_path, image_transform, subject)
     split_train = Splitter(dataset_train, split_path = splits_path, split_num = 0, split_name = 'train', subject= subject)
     split_test = Splitter(dataset_test, split_path = splits_path, split_num = 0, split_name = 'test', subject = subject)
     return (split_train, split_test)
 
-
-
-
-def create_EEG_dataset_r(eeg_signals_path='../dreamdiffusion/datasets/eeg_5_95_std.pth', 
-            # splits_path = '../dreamdiffusion/datasets/block_splits_by_image_single.pth',
-            splits_path = '../dreamdiffusion/datasets/block_splits_by_image_all.pth',
-            image_transform=identity):
-    if isinstance(image_transform, list):
-        dataset_train = EEGDataset_r(eeg_signals_path, image_transform[0])
-        dataset_test = EEGDataset_r(eeg_signals_path, image_transform[1])
-    else:
-        dataset_train = EEGDataset_r(eeg_signals_path, image_transform)
-        dataset_test = EEGDataset_r(eeg_signals_path, image_transform)
-    # split_train = Splitter(dataset_train, split_path = splits_path, split_num = 0, split_name = 'train')
-    # split_test = Splitter(dataset_test, split_path = splits_path, split_num = 0, split_name = 'test')
-    return (dataset_train,dataset_test)
 
 class random_crop:
     def __init__(self, size, p):
@@ -427,18 +349,27 @@ class random_crop:
         if torch.rand(1) < self.p:
             return transforms.RandomCrop(size=(self.size, self.size))(img)
         return img
+
+
+
 def normalize2(img):
     if img.shape[-1] == 3:
         img = rearrange(img, 'h w c -> c h w')
     img = torch.tensor(img)
     img = img * 2.0 - 1.0 # to -1 ~ 1
     return img
+
+
+
 def channel_last(img):
         if img.shape[-1] == 3:
             return img
         return rearrange(img, 'c h w -> h w c')
+
+
 if __name__ == '__main__':
     import scipy.io as scio
     import copy
     import shutil
+
 
