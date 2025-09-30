@@ -68,8 +68,9 @@ if __name__ == '__main__':
     config = sd['config']
     # update paths
     config.root_path = root
-    config.pretrain_mbm_path = '../dreamdiffusion/results/eeg_pretrain/19-02-2023-08-48-17/checkpoints/checkpoint.pth'
+
     config.pretrain_gm_path = '../dreamdiffusion/pretrains/'
+    config.eeg_signals_path = "../eeg_5_95_std.pth"
     print(config.__dict__)
 
     output_path = os.path.join(config.root_path, 'results', 'eval',  
