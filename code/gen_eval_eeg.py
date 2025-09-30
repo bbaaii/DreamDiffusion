@@ -12,7 +12,7 @@ import argparse
 
 from config import Config_Generative_Model
 from dataset import create_EEG_dataset
-from dc_ldm.ldm_for_eeg import eLDM
+from dc_ldm.ldm_for_eeg import eLDM_eval
 
 def to_image(img):
     if img.shape[-1] != 3:
@@ -55,6 +55,14 @@ def get_args_parser():
     parser.add_argument('--dataset', type=str, default='GOD')
     parser.add_argument('--model_path', type=str)
 
+    parser.add_argument('--splits_path', type=str, default=None,
+                        help='Path to dataset splits.')
+    parser.add_argument('--eeg_signals_path', type=str, default=None,
+                        help='Path to EEG signals data.')
+
+    parser.add_argument('--config_patch', type=str, default=None,
+                        help='sd config path.')
+
     return parser
 
 
@@ -69,9 +77,6 @@ if __name__ == '__main__':
     # update paths
     config.root_path = root
 
-    config.pretrain_gm_path = '../dreamdiffusion/pretrains/'
-    config.eeg_signals_path = "../eeg_5_95_std.pth"
-    print(config.__dict__)
 
     output_path = os.path.join(config.root_path, 'results', 'eval',  
                     '%s'%(datetime.datetime.now().strftime("%d-%m-%Y-%H-%M-%S")))
@@ -92,17 +97,14 @@ if __name__ == '__main__':
     ])
 
     
-    splits_path = "../dreamdiffusion/datasets/block_splits_by_image_single.pth"
-    dataset_train, dataset_test = create_EEG_dataset(eeg_signals_path = config.eeg_signals_path, splits_path = splits_path, 
+    dataset_train, dataset_test = create_EEG_dataset(eeg_signals_path = args.eeg_signals_path, splits_path = args.splits_path, 
                 image_transform=[img_transform_train, img_transform_test], subject = 4)
     num_voxels = dataset_test.dataset.data_len
 
-    # num_voxels = dataset_test.num_voxels
-    print(len(dataset_test))
-    # prepare pretrained mae 
+
 
     # create generateive model
-    generative_model = eLDM(None, num_voxels,
+    generative_model = eLDM_eval(args.config_patch, num_voxels,
                 device=device, pretrain_root=config.pretrain_gm_path, logger=config.logger,
                 ddim_steps=config.ddim_steps, global_pool=config.global_pool, use_time_cond=config.use_time_cond)
     # m, u = model.load_state_dict(pl_sd, strict=False)
