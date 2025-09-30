@@ -99,9 +99,9 @@ if __name__ == '__main__':
     # num_voxels = dataset_test.num_voxels
     print(len(dataset_test))
     # prepare pretrained mae 
-    pretrain_mbm_metafile = torch.load(config.pretrain_mbm_path, map_location='cpu')
+
     # create generateive model
-    generative_model = eLDM(pretrain_mbm_metafile, num_voxels,
+    generative_model = eLDM(None, num_voxels,
                 device=device, pretrain_root=config.pretrain_gm_path, logger=config.logger,
                 ddim_steps=config.ddim_steps, global_pool=config.global_pool, use_time_cond=config.use_time_cond)
     # m, u = model.load_state_dict(pl_sd, strict=False)
