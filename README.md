@@ -3,6 +3,11 @@
 <img src=assets/eeg_teaser.png />
 </p>
 
+
+
+**[2025.9.30]** Some paths were set incorrectly. Since they were only tested on the previous server, they were not noticed and have been corrected.
+The pre-training encoder does not need to be loaded separately during inference
+
 ## DreamDiffusion
 **DreamDiffusion** is a framework for generating high-quality images from brain EEG signals.
 This document introduces the precesedures required for replicating the results in *DreamDiffusion: Generating High-Quality Images from Brain EEG Signals*
