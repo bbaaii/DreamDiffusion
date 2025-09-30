@@ -4,7 +4,7 @@
 </p>
 
 
-
+## Update
 **[2025.9.30]** Some paths were set incorrectly. Since they were only tested on the previous server, they were not noticed and have been corrected.
 The pre-trained encoder does not need to be loaded separately during inference
 
