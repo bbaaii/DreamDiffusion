@@ -62,6 +62,9 @@ def get_args_parser():
 
     parser.add_argument('--config_patch', type=str, default=None,
                         help='sd config path.')
+    
+    parser.add_argument('--imagenet_path', type=str, default=None,
+                        help='imagenet path.')
 
     return parser
 
@@ -97,7 +100,8 @@ if __name__ == '__main__':
     ])
 
     
-    dataset_train, dataset_test = create_EEG_dataset(eeg_signals_path = args.eeg_signals_path, splits_path = args.splits_path, 
+    dataset_train, dataset_test = create_EEG_dataset(eeg_signals_path = args.eeg_signals_path, 
+                splits_path = args.splits_path, imagenet_path=args.imagenet_path,
                 image_transform=[img_transform_train, img_transform_test], subject = 4)
     num_voxels = dataset_test.dataset.data_len
 
