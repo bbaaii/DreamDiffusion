@@ -79,42 +79,6 @@ conda env create -f env.yaml
 conda activate dreamdiffusion
 ```
 
-## Download checkpoints
-
-We also checkpoints to run the finetuing and decoding directly. 
-
-
-
-## Pre-training on EEG data
-
-You can download the dataset for pretraining from here [MOABB](https://github.com/NeuroTechX/moabb).
-
-To perform the pre-training from scratch with defaults parameters, run 
-```sh
-python3 code/stageA1_eeg_pretrain.py
-``` 
-
-Hyper-parameters can be changed with command line arguments,
-```sh
-python3 code/stageA1_eeg_pretrain.py --mask_ratio 0.75 --num_epoch 800 --batch_size 2
-```
-
-Or the parameters can also be changed in ```code/config.py```
-
-Multiple-GPU (DDP) training is supported, run with 
-```sh
-python -m torch.distributed.launch --nproc_per_node=NUM_GPUS code/stageA1_eeg_pretrain.py
-```
-
-
-
-## Finetune the Stable Diffusion with Pre-trained EEG Encoder
-In this stage, the cross-attention heads and pre-trained EEG encoder will be jointly optimized with EEG-image pairs. 
-
-```sh
-python3 code/eeg_ldm.py --dataset EEG  --num_epoch 300 --batch_size 4 --pretrain_mbm_path ../dreamdiffusion/pretrains/eeg_pretrain/checkpoint.pth
-```
-
 
 ## Generating Images with Trained Checkpoints
 Run this stage with our provided checkpoints: Here we provide a checkpoint [ckpt](https://drive.google.com/file/d/1Ygplxe1TB68-aYu082bjc89nD8Ngklnc/view?usp=drive_link), which you may want to try.
