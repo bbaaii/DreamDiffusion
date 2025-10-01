@@ -83,7 +83,7 @@ conda activate dreamdiffusion
 ## Generating Images with Trained Checkpoints
 Run this stage with our provided checkpoints: Here we provide a checkpoint [ckpt](https://drive.google.com/file/d/1Ygplxe1TB68-aYu082bjc89nD8Ngklnc/view?usp=drive_link), which you may want to try.
 ```sh
-python3 code/gen_eval_eeg.py --dataset EEG --model_path  pretrains/generation/checkpoint.pth --splits_path "./block_splits_by_image_single.pth" --eeg_signals_path "./eeg_5_95_std.pth" --config_patch "./pretrains/models/config15.yaml"
+python3 code/gen_eval_eeg.py --dataset EEG --model_path  pretrains/models/checkpoint.pth --splits_path "datasets/block_splits_by_image_single.pth" --eeg_signals_path "datasets/eeg_5_95_std.pth" --config_patch "pretrains/models/config15.yaml"
 ```
 
 
